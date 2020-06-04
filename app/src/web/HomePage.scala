@@ -4,16 +4,18 @@ import th.logz.LoggerProvider
 import zio.Task
 
 import app.runZ
+import io.vertx.ext.web.RoutingContext
 
 object homePage extends LoggerProvider {
-  def render(): String = {
-    logger.debug("Enter render().")
-    runZ.runTask(create())
+  def handle(rc: RoutingContext): Unit = {
+    logger.debug("Enter handle().")
+    val page = runZ.runTask(render())
+    rc.response().end(page)
   }
 
-  def create(): Task[String] = {
+  def render(): Task[String] = {
     Task {
-      logger.debug("Enter create()")
+      logger.debug("Enter render()")
 
       // Thread.getAllStackTraces().keySet().forEach((t) => println(t.getName()))
 

@@ -6,6 +6,7 @@ import io.vertx.ext.web.handler.{ErrorHandler, StaticHandler}
 import th.logz.LoggerProvider
 
 import app.appConfig.AppConfig
+import app.web.appRoutes
 
 object mainRouter extends LoggerProvider {
 
@@ -13,28 +14,25 @@ object mainRouter extends LoggerProvider {
   private val WebRoot = "app/resources/public"
 
   def setRoutes(router: Router, config: AppConfig) = {
-    val homeRoute = router.get("/")
+    appRoutes.setRoutes(router)
+    setSystemRoutes(router, config)
+  }
 
-    homeRoute.handler(rc => {
-      val response = rc.response()
-      response.end(web.homePage.render())
-    })
-
+  private def setSystemRoutes(router: Router, config: AppConfig) {
     router
       .route("/static/*")
       .handler(StaticHandler.create().setWebRoot(WebRoot))
 
     val failureRoute = router.route().last()
-    failureRoute.failureHandler(ErrorHandler.create(isDev))
+    failureRoute.failureHandler(ErrorHandler.create(isDev(config)))
+    logger.debug("Static and failure routes are set.")
+  }
 
-    logger.debug("Routes are set.")
-
-    def isDev = {
-      val appEnvironment = config.appEnvironment
-      logger.debug(s"Application environment: ${appEnvironment}")
-      if (appEnvironment.toLowerCase() == DevEnvironment) {
-        true
-      } else false
-    }
+  private def isDev(config: AppConfig) = {
+    val appEnvironment = config.appEnvironment
+    logger.debug(s"Application environment: ${appEnvironment}")
+    if (appEnvironment.toLowerCase() == DevEnvironment) {
+      true
+    } else false
   }
 }

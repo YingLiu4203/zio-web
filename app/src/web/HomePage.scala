@@ -1,50 +1,41 @@
 package app.web
 
-import zio.{Runtime, Task}
 import th.logz.LoggerProvider
+import zio.Task
+
+import app.runZ
 
 object homePage extends LoggerProvider {
-
   def render(): String = {
     logger.debug("Enter render().")
-    val task: Task[String] = Task(create())
-    Runtime.global
-    // Runtime.default
-      .unsafeRunSync(task)
-      .fold(
-        cause => {
-          val throwable = cause.squashTrace
-          logger.error("Homepage throwed an exception.", throwable)
-          throw throwable
-        },
-        result => {
-          logger.debug("Home page rendered")
-          result
-        }
-      )
+    runZ.runTask(create())
   }
 
-  def create(): String = {
-    import scalatags.Text.all.{getClass => getClazz, _}
+  def create(): Task[String] = {
+    Task {
+      logger.debug("Enter create()")
 
-    logger.debug(s"Enter create()")
-    html(
-      head(
-        meta(charset := "utf-8"),
-        link(
-          rel := "stylesheet",
-          href := "/static/bootstrap-4.5.0-dist/css/bootstrap.min.css"
-        )
-      ),
-      body(
-        div(cls := "container")(
-          h1("Scala Chat 聊天"),
-          hr,
-          div(id := "messageList")(
-            p("Messages for today.")
+      // Thread.getAllStackTraces().keySet().forEach((t) => println(t.getName()))
+
+      import scalatags.Text.all.{getClass => getClazz, _}
+      html(
+        head(
+          meta(charset := "utf-8"),
+          link(
+            rel := "stylesheet",
+            href := "/static/bootstrap-4.5.0-dist/css/bootstrap.min.css"
+          )
+        ),
+        body(
+          div(cls := "container")(
+            h1("Scala Chat 聊天"),
+            hr,
+            div(id := "messageList")(
+              p("Have a nice day.")
+            )
           )
         )
-      )
-    ).render
+      ).render
+    }
   }
 }

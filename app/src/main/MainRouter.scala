@@ -31,7 +31,7 @@ object mainRouter extends LoggerProvider {
 
     def isDev = {
       val appEnvironment = config.appEnvironment
-      logger.debug(s"app environment: ${appEnvironment}")
+      logger.debug(s"Application environment: ${appEnvironment}")
       if (appEnvironment.toLowerCase() == DevEnvironment) {
         true
       } else false

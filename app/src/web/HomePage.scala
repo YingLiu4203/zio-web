@@ -1,17 +1,33 @@
 package app.web
 
 import zio.{Runtime, Task}
+import th.logz.LoggerProvider
 
-object home {
+object homePage extends LoggerProvider {
 
   def render(): String = {
+    logger.debug("Enter render().")
     val task: Task[String] = Task(create())
-    Runtime.default.unsafeRunTask(task)
+    Runtime.global
+    // Runtime.default
+      .unsafeRunSync(task)
+      .fold(
+        cause => {
+          val throwable = cause.squashTrace
+          logger.error("Homepage throwed an exception.", throwable)
+          throw throwable
+        },
+        result => {
+          logger.debug("Home page rendered")
+          result
+        }
+      )
   }
 
   def create(): String = {
-    import scalatags.Text.all._
+    import scalatags.Text.all.{getClass => getClz, _}
 
+    logger.debug(s"Enter create()")
     html(
       head(
         meta(charset := "utf-8"),

@@ -17,7 +17,7 @@ object mainRouter extends LoggerProvider {
 
     homeRoute.handler(rc => {
       val response = rc.response()
-      response.end(web.home.render())
+      response.end(web.homePage.render())
     })
 
     router

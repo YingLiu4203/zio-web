@@ -25,7 +25,7 @@ object homePage extends LoggerProvider {
   }
 
   def create(): String = {
-    import scalatags.Text.all.{getClass => getClz, _}
+    import scalatags.Text.all.{getClass => getClazz, _}
 
     logger.debug(s"Enter create()")
     html(
@@ -46,8 +46,5 @@ object homePage extends LoggerProvider {
         )
       )
     ).render
-
-    // throw new RuntimeException("something tested")
   }
-
 }

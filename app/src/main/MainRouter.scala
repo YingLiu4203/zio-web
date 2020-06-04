@@ -27,6 +27,8 @@ object mainRouter extends LoggerProvider {
     val failureRoute = router.route().last()
     failureRoute.failureHandler(ErrorHandler.create(isDev))
 
+    logger.debug("setRoutes completed.")
+
     def isDev = {
       val appEnvironment = config.appEnvironment
       logger.debug(s"app environment: ${appEnvironment}")

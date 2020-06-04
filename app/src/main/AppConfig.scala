@@ -1,7 +1,7 @@
 package app
 
-import pureconfig._
-import pureconfig.generic.auto._
+import pureconfig.ConfigSource
+import pureconfig.generic.auto._ // required for case class or sealed trait
 
 object appConfig {
 

@@ -9,8 +9,10 @@ import io.vertx.ext.web.Router
 object main extends LoggerProvider {
 
   def main(args: Array[String]): Unit = {
+    logger.debug("Application starts.")
 
     val config = appConfig.load()
+    logger.debug("Configuration loaded.")
 
     // Vertx is the control center
     val vertx = Vertx.vertx()

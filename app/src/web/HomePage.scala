@@ -22,7 +22,7 @@ object homePage extends LoggerProvider {
       // if (count % 3 == 0)
       //   throw new RuntimeException("Triple number exception !")
 
-      Thread.sleep(100)
+      // Thread.sleep(1)
 
       import scalatags.Text.all.{getClass => getClazz, _}
       html(

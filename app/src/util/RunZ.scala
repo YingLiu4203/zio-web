@@ -9,8 +9,7 @@ object runZ extends LoggerProvider {
   private val runtime = Runtime.default
 
   def runTask(task: Task[String], rc: RoutingContext): Unit = {
-    val id = task.toString
-    logger.debug(s"Run task id:${id}.")
+    logger.debug("In runTask.")
 
     // run in the async pool
     val forked = for {
@@ -26,11 +25,11 @@ object runZ extends LoggerProvider {
       _.fold(
         cause => {
           val throwable = cause.squashTrace
-          logger.warn(s"Run failed for task id:${id}.", throwable)
+          logger.warn(s"runTask failed.", throwable)
           rc.fail(throwable)
         },
         result => {
-          logger.debug(s"Run completed for task id:${id}.")
+          logger.debug("runTask completed.")
           pageHelper.renderHtml(rc, result)
         }
       )

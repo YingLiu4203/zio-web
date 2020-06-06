@@ -12,17 +12,9 @@ object homePage extends LoggerProvider {
     runZ.runTask(renderHome, rc)
   }
 
-  var count = 0
-
   val renderHome: Task[String] = {
     Task {
       logger.debug("Enter renderHome")
-
-      // count += 1
-      // if (count % 3 == 0)
-      //   throw new RuntimeException("Triple number exception !")
-
-      // Thread.sleep(1)
 
       import scalatags.Text.all.{getClass => getClazz, _}
       html(

@@ -1,13 +1,14 @@
 package app.util
 
-import zio.{Runtime, Task}
+import zio.{Runtime, Task, blocking}
 
 import th.logz.LoggerProvider
+import io.vertx.ext.web.RoutingContext
 
 object runZ extends LoggerProvider {
   private val runtime = Runtime.default
 
-  def runTask[A](task: Task[A]): A = {
+  def runTask(task: Task[String], rc: RoutingContext): Unit = {
     val id = task.toString
     logger.debug(s"Run task id:${id}.")
 
@@ -16,9 +17,10 @@ object runZ extends LoggerProvider {
       result <- fiber.join
     } yield result
 
-    runtime
-      .unsafeRunSync(forked)
-      .fold(
+    // val blocked = blocking.blocking(task)
+
+    runtime.unsafeRunAsync(forked)(
+      _.fold(
         cause => {
           val throwable = cause.squashTrace
           logger.error(s"Run failed for task id:${id}.", throwable)
@@ -26,8 +28,9 @@ object runZ extends LoggerProvider {
         },
         result => {
           logger.debug(s"Run completed for task id:${id}.")
-          result
+          pageHelper.renderHtml(rc, result)
         }
       )
+    )
   }
 }

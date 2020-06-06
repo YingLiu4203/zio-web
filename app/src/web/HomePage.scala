@@ -9,17 +9,20 @@ import io.vertx.ext.web.RoutingContext
 object homePage extends LoggerProvider {
   def handle(rc: RoutingContext): Unit = {
     logger.debug("Enter handle().")
-    val page = runZ.runTask(renderHome)
-    pageHelper.renderHtml(rc, page)
+    runZ.runTask(renderHome, rc)
   }
+
+  var count = 0
 
   val renderHome: Task[String] = {
     Task {
       logger.debug("Enter renderHome")
 
-      val sleepTime = 50 * 1_000_000L
-      val startTime = System.nanoTime()
-      while ((System.nanoTime() - startTime) < sleepTime) {}
+      // count += 1
+      // if (count % 3 == 0)
+      //   throw new RuntimeException("Triple number exception !")
+
+      Thread.sleep(100)
 
       import scalatags.Text.all.{getClass => getClazz, _}
       html(

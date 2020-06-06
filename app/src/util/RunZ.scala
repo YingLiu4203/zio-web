@@ -1,17 +1,23 @@
-package app
+package app.util
 
 import zio.{Runtime, Task}
 
 import th.logz.LoggerProvider
 
 object runZ extends LoggerProvider {
-  private val runtime = Runtime.global
+  private val runtime = Runtime.default
 
   def runTask[A](task: Task[A]): A = {
     val id = task.toString
     logger.debug(s"Run task id:${id}.")
+
+    val forked = for {
+      fiber <- task.fork
+      result <- fiber.join
+    } yield result
+
     runtime
-      .unsafeRunSync(task)
+      .unsafeRunSync(forked)
       .fold(
         cause => {
           val throwable = cause.squashTrace

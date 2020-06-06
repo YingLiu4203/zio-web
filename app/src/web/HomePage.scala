@@ -3,21 +3,23 @@ package app.web
 import th.logz.LoggerProvider
 import zio.Task
 
-import app.runZ
+import app.util.{runZ, pageHelper}
 import io.vertx.ext.web.RoutingContext
 
 object homePage extends LoggerProvider {
   def handle(rc: RoutingContext): Unit = {
     logger.debug("Enter handle().")
-    val page = runZ.runTask(render())
-    rc.response().end(page)
+    val page = runZ.runTask(renderHome)
+    pageHelper.renderHtml(rc, page)
   }
 
-  def render(): Task[String] = {
+  val renderHome: Task[String] = {
     Task {
-      logger.debug("Enter render()")
+      logger.debug("Enter renderHome")
 
-      // Thread.getAllStackTraces().keySet().forEach((t) => println(t.getName()))
+      val sleepTime = 50 * 1_000_000L
+      val startTime = System.nanoTime()
+      while ((System.nanoTime() - startTime) < sleepTime) {}
 
       import scalatags.Text.all.{getClass => getClazz, _}
       html(
